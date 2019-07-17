@@ -4,13 +4,20 @@ from selenium import webdriver
 #from pyutils import get_auth
 from selenium.webdriver.common.keys import Keys
 
+script_dir = os.getcwd()
+
+if 'win' in str(sys.platform):
+    driver_path = script_dir + '\chromedrivers\win_chromedriver.exe'
+else:
+    driver_path = script_dir + '/chromedrivers/mac_chromedriver'
+
 #%%
 
 def wait_for(target):
     while not(target in str(driver.page_source.encode("utf-8"))):
         time.sleep(0.01)
 
-driver = webdriver.Chrome(executable_path=r'C:/webdrivers/chromedriver.exe')
+driver = webdriver.Chrome(executable_path=driver_path)
 
 #%%
 driver.get('https://www.southwest.com/air/check-in/index.html')

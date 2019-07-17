@@ -3,13 +3,12 @@ import time
 from selenium import webdriver
 from pyutils import get_auth
 from selenium.webdriver.common.keys import Keys
-import sys
 import os
 
-script_dir = os.path.dirname(__file__)
+script_dir = os.getcwd()
 
 if 'win' in str(sys.platform):
-    driver_path = script_dir + '/chromedrivers/win_chromedriver.exe'
+    driver_path = script_dir + '\chromedrivers\win_chromedriver.exe'
 else:
     driver_path = script_dir + '/chromedrivers/mac_chromedriver'
 
