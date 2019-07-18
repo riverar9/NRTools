@@ -7,20 +7,42 @@ import email
 
 #%%
 
-def get_full_name(embody, airline):
-	if airline == 'SWA':
-		Full_Name = email_html[email_html.find('TICKET #'):]
-		Full_Name = Full_Name[Full_Name.find(cur_props['Name_Locator'])+len(cur_props['Name_Locator']):]
-		Full_Name = Full_Name[Full_Name.find('>'):]
-		Full_Name = Full_Name[:Full_Name.find('<')]
-		Full_Name = Full_Name.replace('>','').replace("\r\n",'').rstrip().lstrip().split('&nbsp;')
-		return Full_Name
+def get_full_name(ebody, config, anchor):
+	if config == 'WN':
+		result = ebody[ebody.find('TICKET #'):]
+		result = result[result.find(anchor):]
+		result = result[:result.find('<')]
+		return result[:result.find('\n')-1].split('&nbsp;')
+
+def get_PNR(esubject, airline):
+	if airline == 'WN':
+		return esubject[esubject.find("(")+1:esubject.find(")")]
+
+def get_depart_info(ebody, config):
+	if config == 'WN':
+		info = ebody[ebody.find('DEPARTS'):]
+		info = info[info.find('\r\nong>')+6:]
+		airport_time = info[:info.find('<')]
+		
+		AM_PM = info[info.find(airport_time) + len(airport_time):]
+		AM_PM = AM_PM[AM_PM.find('span>')+len('span>'):AM_PM.find('\r\n')]
+
+		d_date = ebody.replace('\r\n','')
+		d_date = d_date[d_date.find('date')+6:d_date.find('date')+22]
+		d_date = d_date.rstrip().replace('=','').replace(' ','')
+
+		result = airport_time.split(' ')
+		result[1] = result[1] + ' ' + AM_PM
+
+		result.append(d_date)
+		
+		return result
 
 #%%
 
-mail_address  = "autononrev@gmail.com"
-maill_pwd    = "Rivera1994"
-smtp_server = "imap.gmail.com"
+mail_address	= "autononrev@gmail.com"
+maill_pwd   	= "Rivera1994"
+smtp_server		= "imap.gmail.com"
 
 #%%
 
@@ -36,7 +58,7 @@ id_list = mail_ids.split()
 mail_ids = []
 
 for each in id_list:
-	mail_ids.append(bytes(each))
+	mail_ids.append(int(each))
 
 #%%
 
@@ -45,18 +67,27 @@ cur_props = pkl.load(open('properties.p','rb'))
 #%%
 
 if cur_props['inboxcount'] != max(mail_ids): #if we have new emails then we'll process them
-	for email_ids in  range(cur_props['inboxcount'], max(mail_ids)):
-		typ, data = mail.fetch(1, '(RFC822)')
-		msg = email.message_from_string(email[1].decode('utf-8'))
+	for email_id in  range(cur_props['inboxcount'], max(mail_ids)):
+		print('\n\nItinerary:')
+		typ, data = mail.fetch(id_list[email_id], '(RFC822)')
 
-		if msg['from'] == '"Southwest Airlines" <southwestairlines@ifly.southwest.com>':
+		for response in data:
+			if isinstance(response, tuple):
+				msg = email.message_from_string(response[1].decode('utf-8'))
 
-			email_subject = msg['subject']
-			
-			PNR = email_subject[email_subject.find("(")+1:email_subject.find(")")]
-			
-			f_name, l_name = get_full_name(msg.get_payload(), 'SWA')
-			
+				if 'southwestairlines@ifly.southwest.com' in msg['from']:
+					airline = 'WN'
+					
+					em_sub = msg['subject']
+					em_sub_fn = em_sub[:em_sub.find("'s ")]
+
+					PNR = get_PNR(em_sub, airline)
+					full_name = get_full_name(msg.get_payload(), airline ,em_sub_fn)
+					depart_info = get_depart_info(msg.get_payload(), airline)
+
+					print(full_name)
+					print(PNR)
+					print(depart_info)
 
 
 
@@ -78,3 +109,6 @@ if cur_props['inboxcount'] != max(mail_ids): #if we have new emails then we'll p
 			# email_from = msg['from']
 			# print 'From : ' + email_from + '\n'
 			# print 'Subject : ' + email_subject + '\n'
+
+
+#%%
