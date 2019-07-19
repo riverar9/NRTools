@@ -1,4 +1,8 @@
 from datetime import datetime
+from datetime import timedelta
+import requests
+import json
+from time import gmtime, strftime
 
 class flight_listing:
     def __init__(self, carrier, message):
@@ -42,3 +46,12 @@ class flight_listing:
             # 5A This section uses the body to determine the destination
             t_destination = message.get_payload()[message.get_payload().find('ARRIVES'):]
             self.destination_airport = t_destination[t_destination.find('\r\nng>')+len('\r\nng>'):t_destination.find('\r\nng>')+len('\r\nng>')+3]
+
+            # 6A This section uses an online resource to figure out when to begin the checkin process
+            t_airport_api_link = "https://airports-api.s3-us-west-2.amazonaws.com/iata/{}.json".format(self.departure_airport.lower())
+            t_airport_api_data = requests.get(t_airport_api_link)
+            t_dep_time = datetime.datetime.now(pytz.timezone(json.loads(t_airport_api_data.text)['timezone']))
+            t_cpu_time = datetime.datetime.now()
+            t_min_diff = (t_dep_time.hour - t_cpu_time.hour)*60 + (t_dep_time.minute - t_cpu_time.minute)
+            self.checkin_datetime = self.depart_datetime - timedelta(minutes=t_min_diff)
+

@@ -18,7 +18,7 @@ mail = imaplib.IMAP4_SSL(smtp_server)
 mail.login(mail_address,maill_pwd)
 mail.select('inbox')
 
-print('Successfully connected to {} inbox!'.format(mail_address))
+print('\nSuccessfully connected to {} inbox!\n'.format(mail_address))
 
 #%%
 
@@ -54,9 +54,10 @@ if cur_props['inboxcount'] != max(mail_ids): #if we have new emails then we'll p
 					this_listing.depart_datetime
 					))
 
-cur_props['inboxcount'] = max(mail_ids)
+print("\n{} items added for checkin.".format(max(mail_ids)-cur_props['inboxcount']))
+#cur_props['inboxcount'] = max(mail_ids)
 
-pkl.dump(cur_props, open('properties.p','wb'))
+#pkl.dump(cur_props, open('properties.p','wb'))
 
 
 #%%
