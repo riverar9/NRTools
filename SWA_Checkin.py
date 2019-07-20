@@ -46,16 +46,31 @@ def flight_checkin(listings):
         checkin1_element.click()
         time.sleep(1.5)
 
-        checkin_early_string = "You're requesting to check in and print your boarding pass outside our permitted 24 hour check-in window. Please check in within 24 hours of your flight's scheduled departure."
+        wait_for_strings = ["Online check-in not valid at this time.",\
+            '<span class="confirmation-number--code">' + each.confirmation_number + '</span>',\
+            "We are unable to retrieve your reservation."]
 
-        if checkin_early_string in str(driver.page_source.encode("utf-8")):
-            while checkin_early_string in str(driver.page_source.encode("utf-8")):
-                checkin1_element.click()
-                time.sleep(0.25)
-        
-        final_conf_string = '<span class="confirmation-number--code">' + each.confirmation_number + '</span>'
+        moved_on = False
 
-        if final_conf_string in str(driver.page_source.encode("utf-8")):
+        while not(moved_on):
+            while not(wait_for_strings[0] in str(driver.page_source.encode("utf-8"))\
+                or wait_for_strings[1] in str(driver.page_source.encode("utf-8"))\
+                or wait_for_strings[2] in str(driver.page_source.encode("utf-8"))):
+                time.sleep(0.01)
+
+            if wait_for_strings[0] in str(driver.page_source.encode("utf-8")): #checks if this case is the attempted to early case
+                while wait_for_strings[0] in str(driver.page_source.encode("utf-8")):
+                    try:
+                        checkin1_element.click()
+                    except:
+                        pass
+                    time.sleep(0.25)
+
+            if wait_for_strings[1] in str(driver.page_source.encode("utf-8")):
+                moved_on = True
+
+
+        if wait_for_strings[1] in str(driver.page_source.encode("utf-8")):
             checkin2_element = driver.find_element_by_class_name('actionable actionable_button actionable_large-button actionable_no-outline actionable_primary button submit-button air-check-in-review-results--check-in-button'.replace(' ','.'))
             checkin2_element.click()
 
@@ -63,5 +78,5 @@ def flight_checkin(listings):
 
             driver.close()
         else:
-            pkl.dump(driver.page_source.encode("utf-8"), open('/Exceptions/' + each.confirmation_number + '.txt','wb'))
+            pkl.dump(driver.page_source.encode("utf-8"), open(each.confirmation_number + '.txt','wb'))
             raise Exception("Unexpected scenerio. Saved in {}.".format(str(sys.platform)))
