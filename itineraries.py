@@ -1,14 +1,14 @@
-from datetime import datetime
-from datetime import timedelta
+from datetime import datetime, timedelta
 import requests
 import json
+import pytz
 from time import gmtime, strftime
 
 class flight_listing:
     def __init__(self, carrier, message):
         if carrier == 'WN':
             # 1A This section goes through the subject to get the confirmation number
-            t_subject = message['subject'].replace(' (Love) ',' ').replace(' (Hobby) ','')
+            t_subject = message['subject'].replace(' (Love) ',' ').replace(' (Hobby) ','').replace('(LaGuardia)','')
             self.confirmation_number = t_subject[t_subject.find("(")+1:t_subject.find(")")]
 
             # 2A This section goes through the subject to get the passenger's first name
@@ -50,8 +50,20 @@ class flight_listing:
             # 6A This section uses an online resource to figure out when to begin the checkin process
             t_airport_api_link = "https://airports-api.s3-us-west-2.amazonaws.com/iata/{}.json".format(self.departure_airport.lower())
             t_airport_api_data = requests.get(t_airport_api_link)
-            t_dep_time = datetime.datetime.now(pytz.timezone(json.loads(t_airport_api_data.text)['timezone']))
-            t_cpu_time = datetime.datetime.now()
+            t_dep_time = datetime.now(pytz.timezone(json.loads(t_airport_api_data.text)['timezone']))
+            t_cpu_time = datetime.now()
             t_min_diff = (t_dep_time.hour - t_cpu_time.hour)*60 + (t_dep_time.minute - t_cpu_time.minute)
-            self.checkin_datetime = self.depart_datetime - timedelta(minutes=t_min_diff)
+            t_min_diff = t_min_diff + 1440
+            self.checkin_datetime = self.depart_datetime - timedelta(minutes=(t_min_diff))
+
+            # 7A I'm very important so me and mehru are always the first ones to be processed :)
+            if self.first_name == 'Richie' and self.last_name == 'Rivera':
+                self.importance = 1
+            elif self.first_name == 'Mehru Nisa' and self.last_name == 'Sheikh':
+                self.importance = 1
+            else:
+                self.importance = 999
+
+            # 8A We're going to use that airline conditional from the beginning to say what this is
+            self.airline = 'WN'
 
