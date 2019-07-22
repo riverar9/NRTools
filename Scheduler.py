@@ -8,15 +8,19 @@ import check_email
 import SWA_Checkin
 import itineraries
 
+test = True
+
 #%%
 
 def get_emails():
-    print('Getting new emails...')
+    print('\nChecking for new emails...')
     check_email.main()
     print('Back to sleep...\n')
+    if test:
+        print(datetime.now())
 
 def check_queue_and_checkin():
-    print("Checking if it's almost time to checkin...")
+    print("\nChecking if it's almost time to checkin...")
     properties =  pkl.load(open('properties.p','rb'))
     flight_list = properties['listings']
 
@@ -50,12 +54,15 @@ def check_queue_and_checkin():
 #%%
 
 if __name__ == "__main__":
-    schedule.every(30).seconds.do(get_emails)
-    schedule.every(10).seconds.do(check_queue_and_checkin)
+    try:
+        schedule.every(10).seconds.do(check_queue_and_checkin)
+        schedule.every(30).seconds.do(get_emails)
 
-    while True:
-        schedule.run_pending()
-        time.sleep(5)
+        while True:
+            schedule.run_pending()
+            time.sleep(5)
+    except:
+        pass
 
 
 #%%

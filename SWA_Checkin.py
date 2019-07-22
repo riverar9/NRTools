@@ -26,6 +26,7 @@ def flight_checkin(listings):
     driver = webdriver.Chrome(executable_path=driver_path)
 
     for each in listings:
+        print("Checking into flight:\t{}".format(each.confirmation_number))
         driver.get('https://www.southwest.com/air/check-in/index.html')
 
         wait_for('<span class="submit-button--text">Check in</span>')
@@ -77,6 +78,8 @@ def flight_checkin(listings):
             wait_for('Security document issued.')
 
             driver.close()
+
+            print("Completed checking into:".format(each.confirmation_number))
         else:
             pkl.dump(driver.page_source.encode("utf-8"), open(each.confirmation_number + '.txt','wb'))
             raise Exception("Unexpected scenerio. Saved in {}.".format(str(sys.platform)))
