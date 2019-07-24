@@ -49,14 +49,16 @@ def flight_checkin(listings):
 
         wait_for_strings = ["Online check-in not valid at this time.",\
             '<span class="confirmation-number--code">' + each.confirmation_number + '</span>',\
-            "We are unable to retrieve your reservation."]
+            "We are unable to retrieve your reservation.",\
+            "Sorry, your itinerary is ineligible for check in online."]
 
         moved_on = False
 
         while not(moved_on):
             while not(wait_for_strings[0] in str(driver.page_source.encode("utf-8"))\
                 or wait_for_strings[1] in str(driver.page_source.encode("utf-8"))\
-                or wait_for_strings[2] in str(driver.page_source.encode("utf-8"))):
+                or wait_for_strings[2] in str(driver.page_source.encode("utf-8"))
+                or wait_for_strings[3] in str(driver.page_source.encode("utf-8"))):
                 time.sleep(0.01)
 
             if wait_for_strings[0] in str(driver.page_source.encode("utf-8")): #checks if this case is the attempted to early case
