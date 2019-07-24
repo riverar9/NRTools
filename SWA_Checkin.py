@@ -69,7 +69,8 @@ def flight_checkin(listings):
                         pass
                     time.sleep(0.25)
 
-            if wait_for_strings[1] in str(driver.page_source.encode("utf-8")):
+            if (wait_for_strings[1] in str(driver.page_source.encode("utf-8"))\
+                or wait_for_strings[3] in str(driver.page_source.encode("utf-8"))):
                 moved_on = True
 
 
@@ -83,5 +84,7 @@ def flight_checkin(listings):
 
             print("Completed checking into:".format(each.confirmation_number))
         else:
+            driver.close()
             pkl.dump(driver.page_source.encode("utf-8"), open(each.confirmation_number + '.txt','wb'))
-            raise Exception("Unexpected scenerio. Saved in {}.".format(str(sys.platform)))
+            print("Unexpected scenerio. Saved in {}.".format(str(sys.platform)))
+            
