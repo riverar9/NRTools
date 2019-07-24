@@ -8,6 +8,7 @@ import check_email
 import SWA_Checkin
 import itineraries
 
+time_started = datetime.now()
 test = True
 
 #%%
@@ -17,7 +18,7 @@ def get_emails():
     check_email.main()
     print('Back to sleep...\n')
     if test:
-        print(datetime.now())
+        print("Running for: {} minutes".format(str((datetime.now()-time_started).total_seconds()/60)))
 
 def check_queue_and_checkin():
     print("\nChecking if it's almost time to checkin...")
