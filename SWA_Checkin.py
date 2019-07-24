@@ -53,38 +53,39 @@ def flight_checkin(listings):
             "Sorry, your itinerary is ineligible for check in online."]
 
         moved_on = False
+        try:
+            while not(moved_on):
+                while not(wait_for_strings[0] in str(driver.page_source.encode("utf-8"))\
+                    or wait_for_strings[1] in str(driver.page_source.encode("utf-8"))\
+                    or wait_for_strings[2] in str(driver.page_source.encode("utf-8"))
+                    or wait_for_strings[3] in str(driver.page_source.encode("utf-8"))):
+                    time.sleep(0.01)
 
-        while not(moved_on):
-            while not(wait_for_strings[0] in str(driver.page_source.encode("utf-8"))\
-                or wait_for_strings[1] in str(driver.page_source.encode("utf-8"))\
-                or wait_for_strings[2] in str(driver.page_source.encode("utf-8"))
-                or wait_for_strings[3] in str(driver.page_source.encode("utf-8"))):
-                time.sleep(0.01)
+                if wait_for_strings[0] in str(driver.page_source.encode("utf-8")): #checks if this case is the attempted to early case
+                    while wait_for_strings[0] in str(driver.page_source.encode("utf-8")):
+                        try:
+                            checkin1_element.click()
+                        except:
+                            pass
+                        time.sleep(0.25)
 
-            if wait_for_strings[0] in str(driver.page_source.encode("utf-8")): #checks if this case is the attempted to early case
-                while wait_for_strings[0] in str(driver.page_source.encode("utf-8")):
-                    try:
-                        checkin1_element.click()
-                    except:
-                        pass
-                    time.sleep(0.25)
-
-            if (wait_for_strings[1] in str(driver.page_source.encode("utf-8"))\
-                or wait_for_strings[3] in str(driver.page_source.encode("utf-8"))):
-                moved_on = True
+                if (wait_for_strings[1] in str(driver.page_source.encode("utf-8"))\
+                    or wait_for_strings[3] in str(driver.page_source.encode("utf-8"))):
+                    moved_on = True
 
 
-        if wait_for_strings[1] in str(driver.page_source.encode("utf-8")):
-            checkin2_element = driver.find_element_by_class_name('actionable actionable_button actionable_large-button actionable_no-outline actionable_primary button submit-button air-check-in-review-results--check-in-button'.replace(' ','.'))
-            checkin2_element.click()
+            if wait_for_strings[1] in str(driver.page_source.encode("utf-8")):
+                checkin2_element = driver.find_element_by_class_name('actionable actionable_button actionable_large-button actionable_no-outline actionable_primary button submit-button air-check-in-review-results--check-in-button'.replace(' ','.'))
+                checkin2_element.click()
 
-            wait_for('Security document issued.')
+                wait_for('Security document issued.')
 
-            driver.close()
+                driver.close()
 
-            print("Completed checking into:".format(each.confirmation_number))
-        else:
-            driver.close()
-            pkl.dump(driver.page_source.encode("utf-8"), open(each.confirmation_number + '.txt','wb'))
-            print("Unexpected scenerio. Saved in {}.".format(str(sys.platform)))
-            
+                print("Completed checking into:".format(each.confirmation_number))
+            else:
+                driver.close()
+                pkl.dump(driver.page_source.encode("utf-8"), open(each.confirmation_number + '.txt','wb'))
+                print("Unexpected scenerio. Saved in {}.".format(str(sys.platform)))
+        except:
+            pass
