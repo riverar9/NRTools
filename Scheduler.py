@@ -60,7 +60,7 @@ if __name__ == "__main__":
 
         while True:
             schedule.run_pending()
-            time.sleep(5)
+            time.sleep(1)
     except:
         pass
 
