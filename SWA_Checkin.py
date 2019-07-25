@@ -68,7 +68,6 @@ def flight_checkin(listings):
                             checkin1_element.click()
                         except:
                             pass
-                        time.sleep(0.01)
 
                 if (wait_for_strings[1] in str(driver.page_source.encode("utf-8"))\
                     or wait_for_strings[3] in str(driver.page_source.encode("utf-8")\
