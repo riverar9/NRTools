@@ -3,9 +3,11 @@ import time
 import itineraries
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
+from datetime import datetime
 import os
 import sys
 import pickle as pkl
+
 
 #%%
 
@@ -45,7 +47,6 @@ def flight_checkin(listings):
         lname_element.send_keys(each.last_name)
 
         checkin1_element.click()
-        time.sleep(1.5)
 
         wait_for_strings = ["Online check-in not valid at this time.",\
             '<span class="confirmation-number--code">' + each.confirmation_number + '</span>',\
@@ -67,10 +68,11 @@ def flight_checkin(listings):
                             checkin1_element.click()
                         except:
                             pass
-                        time.sleep(0.25)
+                        time.sleep(0.01)
 
                 if (wait_for_strings[1] in str(driver.page_source.encode("utf-8"))\
-                    or wait_for_strings[3] in str(driver.page_source.encode("utf-8"))):
+                    or wait_for_strings[3] in str(driver.page_source.encode("utf-8")\
+                    or wait_for_strings[2] in str(driver.page_source.encode("utf-8")))):
                     moved_on = True
 
 
@@ -82,10 +84,12 @@ def flight_checkin(listings):
 
                 driver.close()
 
-                print("Completed checking into:".format(each.confirmation_number))
+                print("Completed checking into:\t{}".format(each.confirmation_number))
             else:
                 driver.close()
                 pkl.dump(driver.page_source.encode("utf-8"), open(each.confirmation_number + '.txt','wb'))
                 print("Unexpected scenerio. Saved in {}.".format(str(sys.platform)))
         except:
             pass
+
+#%%

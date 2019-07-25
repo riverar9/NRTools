@@ -53,7 +53,6 @@ def check_queue_and_checkin():
 #%%
 
 if __name__ == "__main__":
-    schedule.run_all()
     try:
         schedule.every(10).seconds.do(check_queue_and_checkin)
         schedule.every(30).seconds.do(get_emails)
