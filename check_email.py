@@ -48,7 +48,7 @@ def main():
 					if 'southwestairlines@ifly.southwest.com' in msg['from']:
 						this_listing = flight_listing('WN', msg)
 						(cur_props['listings'])['WN-' + this_listing.confirmation_number] = this_listing
-					print("Processed listing {} from {} to {} on {}".format(\
+						print("Processed listing {} from {} to {} on {}".format(\
 						this_listing.confirmation_number,\
 						this_listing.departure_airport,\
 						this_listing.destination_airport,\
@@ -59,3 +59,12 @@ def main():
 	cur_props['inboxcount'] = max(mail_ids)
 
 	pkl.dump(cur_props, open('properties.p','wb'))
+
+
+#%%
+
+
+#%%
+
+
+#%%
