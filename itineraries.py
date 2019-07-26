@@ -51,9 +51,8 @@ class flight_listing:
             # 6A This section uses an online resource to figure out when to begin the checkin process
             t_airport_api_link = "https://airports-api.s3-us-west-2.amazonaws.com/iata/{}.json".format(self.departure_airport.lower())
             t_airport_api_data = requests.get(t_airport_api_link)
-            t_dep_time = datetime.now(pytz.timezone(json.loads(t_airport_api_data.text)['timezone']))
-            t_checkin_datetime = t_dep_time.astimezone(get_localzone())
-            self.checkin_datetime = self.depart_datetime - timedelta(hours=(24))
+            t_dep_tz = pytz.timezone(json.loads(t_airport_api_data.text)['timezone'])
+            self.checkin_datetime = self.depart_datetime.astimezone(get_localzone) - timedelta(days=1)
 
             # 7A I'm very important so me and mehru are always the first ones to be processed :)
             if self.first_name == 'Richie' and self.last_name == 'Rivera':
