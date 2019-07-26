@@ -3,6 +3,7 @@ import requests
 import json
 import pytz
 from time import gmtime, strftime
+from tzlocal import get_localzone
 
 class flight_listing:
     def __init__(self, carrier, message):
@@ -51,10 +52,8 @@ class flight_listing:
             t_airport_api_link = "https://airports-api.s3-us-west-2.amazonaws.com/iata/{}.json".format(self.departure_airport.lower())
             t_airport_api_data = requests.get(t_airport_api_link)
             t_dep_time = datetime.now(pytz.timezone(json.loads(t_airport_api_data.text)['timezone']))
-            t_cpu_time = datetime.now()
-            t_min_diff = (t_dep_time.hour - t_cpu_time.hour)*60 + (t_dep_time.minute - t_cpu_time.minute)
-            t_min_diff = t_min_diff + 1440
-            self.checkin_datetime = self.depart_datetime - timedelta(minutes=(t_min_diff))
+            t_checkin_datetime = t_dep_time.astimezone(get_localzone())
+            self.checkin_datetime = self.depart_datetime - timedelta(hours=(24))
 
             # 7A I'm very important so me and mehru are always the first ones to be processed :)
             if self.first_name == 'Richie' and self.last_name == 'Rivera':
