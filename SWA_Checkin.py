@@ -24,12 +24,13 @@ def flight_checkin(listings):
         driver_path = script_dir + "\chromedrivers\win_chromedriver.exe"
     else:
         raise Exception("App doesn't work for the current OS ({}).".format(str(sys.platform)))
-        
-    driver = webdriver.Chrome(executable_path=driver_path)
+
+    checkin_link = 'https://www.southwest.com/air/check-in/index.html'
 
     for each in listings:
+        driver = webdriver.Chrome(executable_path=driver_path)
         print("Checking into flight:\t{}".format(each.confirmation_number))
-        driver.get('https://www.southwest.com/air/check-in/index.html')
+        driver.get(checkin_link)
 
         wait_for('<span class="submit-button--text">Check in</span>')
 
@@ -81,13 +82,12 @@ def flight_checkin(listings):
 
                 wait_for('Security document issued.')
 
-                driver.close()
-
                 print("Completed checking into:\t{}".format(each.confirmation_number))
             else:
-                driver.close()
                 pkl.dump(driver.page_source.encode("utf-8"), open(each.confirmation_number + '.txt','wb'))
                 print("Unexpected scenerio. Saved in {}.".format(str(sys.platform)))
+            
+            driver.close()
         except:
             pass
 
