@@ -13,8 +13,11 @@ import pickle as pkl
 
 def flight_checkin(listings):
     def wait_for(target):
-        while not(target in str(driver.page_source.encode("utf-8"))):
-            time.sleep(0.01)
+        condition_met = 0
+        while not(condition_met):
+            for each in target:
+                if each in str(driver.page_source.encode("utf-8")):
+                    condition_met = 1
 
     script_dir = os.getcwd()
 
@@ -32,7 +35,7 @@ def flight_checkin(listings):
         print("Checking into flight:\t{}".format(each.confirmation_number))
         driver.get(checkin_link)
 
-        wait_for('<span class="submit-button--text">Check in</span>')
+        wait_for(['<span class="submit-button--text">Check in</span>'])
 
         conf_no_elemet = driver.find_element_by_id('confirmationNumber')
         fname_element = driver.find_element_by_id('passengerFirstName')
@@ -52,16 +55,17 @@ def flight_checkin(listings):
         wait_for_strings = ["Online check-in not valid at this time.",\
             '<span class="confirmation-number--code">' + each.confirmation_number + '</span>',\
             "We are unable to retrieve your reservation.",\
-            "Sorry, your itinerary is ineligible for check in online."]
+            "Sorry, your itinerary is ineligible for check in online.",\
+            "We do not allow online check-in within one hour from a flight's departure. Please proced to the airport to checkin for this flight."]
 
         moved_on = False
         try:
             while not(moved_on):
-                while not(wait_for_strings[0] in str(driver.page_source.encode("utf-8"))\
-                    or wait_for_strings[1] in str(driver.page_source.encode("utf-8"))\
-                    or wait_for_strings[2] in str(driver.page_source.encode("utf-8"))
-                    or wait_for_strings[3] in str(driver.page_source.encode("utf-8"))):
-                    time.sleep(0.01)
+                wait_for(wait_for_strings)
+
+                if wait_for_strings[4] in str(driver.page_source.encode("utf-8")):
+                    moved_on = True
+                    print("Flight within one hour, can't do it boss.")
 
                 if wait_for_strings[0] in str(driver.page_source.encode("utf-8")): #checks if this case is the attempted to early case
                     while wait_for_strings[0] in str(driver.page_source.encode("utf-8")):
@@ -80,7 +84,8 @@ def flight_checkin(listings):
                 checkin2_element = driver.find_element_by_class_name('actionable actionable_button actionable_large-button actionable_no-outline actionable_primary button submit-button air-check-in-review-results--check-in-button'.replace(' ','.'))
                 checkin2_element.click()
 
-                wait_for('Security document issued.')
+                wait_for(['Security document issued.'\
+                    ,'Interisland Carryon Restrictions'])
 
                 print("Completed checking into:\t{}".format(each.confirmation_number))
             else:
