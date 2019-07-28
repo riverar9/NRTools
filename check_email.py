@@ -38,6 +38,7 @@ def main():
 	#%%
 
 	if cur_props['inboxcount'] != max(mail_ids): #if we have new emails then we'll process them
+		print('Processing new emails:')
 		for email_id in  range(cur_props['inboxcount'], max(mail_ids)):
 			typ, data = mail.fetch(id_list[email_id], '(RFC822)')
 

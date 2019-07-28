@@ -14,13 +14,11 @@ test = True
 #%%
 
 def get_emails():
-    print('\nChecking for new emails...')
     check_email.main()
     if test:
         print("Running for: {} minutes".format(str((datetime.now()-time_started).total_seconds()/60)))
 
 def check_queue_and_checkin():
-    print("\nChecking if it's almost time to checkin...\n")
     properties =  pkl.load(open('properties.p','rb'))
     flight_list = properties['listings']
 
@@ -33,6 +31,7 @@ def check_queue_and_checkin():
             removal.append(each)
     
     if len(queue) > 0:
+        print("\nProcessing Coming due Itineraries:\n")
         queue.sort(key=lambda x:x.checkin_datetime)
 
         SWA_Checkin.flight_checkin(queue)
@@ -54,7 +53,7 @@ def check_queue_and_checkin():
 
 if __name__ == "__main__":
     try:
-        schedule.every(10).seconds.do(check_queue_and_checkin)
+        schedule.every(15).seconds.do(check_queue_and_checkin)
         schedule.every(30).seconds.do(get_emails)
 
         schedule.run_all()
