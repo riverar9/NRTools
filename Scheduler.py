@@ -57,6 +57,7 @@ if __name__ == "__main__":
         schedule.every(10).seconds.do(check_queue_and_checkin)
         schedule.every(30).seconds.do(get_emails)
 
+        schedule.run_all()
         while True:
             schedule.run_pending()
             time.sleep(1)

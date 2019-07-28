@@ -9,7 +9,10 @@ class flight_listing:
     def __init__(self, carrier, message):
         if carrier == 'WN':
             # 1A This section goes through the subject to get the confirmation number
-            t_subject = message['subject'].replace(' (Love) ',' ').replace(' (Hobby) ','').replace('(LaGuardia)','')
+            t_subject = message['subject'].replace('(Love)','')\
+                .replace('(Hobby)','')\
+                .replace('(LaGuardia)','')\
+                .replace('(Midway)','')
             self.confirmation_number = t_subject[t_subject.find("(")+1:t_subject.find(")")]
 
             # 2A This section goes through the subject to get the passenger's first name
@@ -55,6 +58,8 @@ class flight_listing:
             t_min_diff = int(round((datetime.now() - datetime.now(t_dep_tz).replace(tzinfo=None)).total_seconds()/60))
             t_checkin_datetime = self.depart_datetime + timedelta(minutes=t_min_diff)
             self.checkin_datetime = t_checkin_datetime - timedelta(hours=24)
+            #print("Local Depart: {}".format(self.depart_datetime))
+            #print("checking in at: {}".format(self.checkin_datetime))
 
             # 7A I'm very important so me and mehru are always the first ones to be processed :)
             if self.first_name == 'Richie' and self.last_name == 'Rivera':
