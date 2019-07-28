@@ -56,7 +56,7 @@ def main():
 						this_listing.depart_datetime
 						))
 
-	print("\n{} items added for checkin.\n".format(max(mail_ids)-cur_props['inboxcount']))
+	print("{} items added for checkin.\n".format(max(mail_ids)-cur_props['inboxcount']))
 	cur_props['inboxcount'] = max(mail_ids)
 
 	pkl.dump(cur_props, open('properties.p','wb'))
