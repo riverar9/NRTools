@@ -88,11 +88,11 @@ def flight_checkin(listings):
                     ,'Interisland Carryon Restrictions'])
 
                 print("Completed checking into:\t{}".format(each.confirmation_number))
+                driver.close()
             else:
                 pkl.dump(driver.page_source.encode("utf-8"), open(each.confirmation_number + '.txt','wb'))
                 print("Unexpected scenerio. Saved in {}.".format(str(sys.platform)))
-            
-            driver.close()
+                driver.close()
         except:
             pass
 
