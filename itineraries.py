@@ -19,8 +19,12 @@ class flight_listing:
             self.first_name = message['subject'][:message['subject'].find("'s ")]
 
             # 3A This section uses the body to determine the passenger's last name
-            t_full_name = message.get_payload()[message.get_payload().find('TICKET #'):]
+            if message.get_payload().find('TICKET #') != -1:
+                t_full_name = message.get_payload()[message.get_payload().find('TICKET #'):]
+            else:
+                t_full_name = message.get_payload()[message.get_payload().find('PASSENGER')]
             t_full_name = t_full_name[t_full_name.find(self.first_name):]
+            print(t_full_name)
             t_full_name = t_full_name[:t_full_name.find('<')]
             self.last_name = (t_full_name[:t_full_name.find('\n')-1].split('&nbsp;'))[1]
 
