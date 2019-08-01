@@ -43,18 +43,21 @@ def main():
 			typ, data = mail.fetch(id_list[email_id], '(RFC822)')
 
 			for response in data:
-				if isinstance(response, tuple):
-					msg = email.message_from_string(response[1].decode('utf-8'))
+				try:
+					if isinstance(response, tuple):
+						msg = email.message_from_string(response[1].decode('utf-8'))
 
-					if 'southwestairlines@ifly.southwest.com' in msg['from']:
-						this_listing = flight_listing('WN', msg)
-						(cur_props['listings'])['WN-' + this_listing.confirmation_number] = this_listing
-						print("Processed listing {} from {} to {} on {}".format(\
-						this_listing.confirmation_number,\
-						this_listing.departure_airport,\
-						this_listing.destination_airport,\
-						this_listing.depart_datetime
-						))
+						if 'southwestairlines@ifly.southwest.com' in msg['from']:
+							this_listing = flight_listing('WN', msg)
+							(cur_props['listings'])['WN-' + this_listing.confirmation_number] = this_listing
+							print("Processed listing {} from {} to {} on {}".format(\
+							this_listing.confirmation_number,\
+							this_listing.departure_airport,\
+							this_listing.destination_airport,\
+							this_listing.depart_datetime
+							))
+				except ValueError:
+					print(ValueError)
 
 	print("{} items added for checkin.\n".format(max(mail_ids)-cur_props['inboxcount']))
 	cur_props['inboxcount'] = max(mail_ids)

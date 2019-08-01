@@ -53,13 +53,16 @@ def check_queue_and_checkin():
 
 if __name__ == "__main__":
     try:
-        schedule.every(15).seconds.do(check_queue_and_checkin)
+        schedule.every(.5).seconds.do(check_queue_and_checkin)
         schedule.every(30).seconds.do(get_emails)
 
         schedule.run_all()
         while True:
-            schedule.run_pending()
-            time.sleep(1)
+            try:
+                schedule.run_pending()
+                time.sleep(.5)
+            except:
+                pass
     except:
         pass
 
