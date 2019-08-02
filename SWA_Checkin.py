@@ -80,7 +80,7 @@ def flight_checkin(listings):
                     or wait_for_strings[3] in str(driver.page_source.encode("utf-8"))\
                     or wait_for_strings[2] in str(driver.page_source.encode("utf-8"))\
                     or wait_for_strings[5] in str(driver.page_source.encode("utf-8"))\
-                    or wait_for_strings[6]] in str(driver.page_source.encode("utf-8"))):
+                    or wait_for_strings[6] in str(driver.page_source.encode("utf-8"))):
                     moved_on = True
 
 

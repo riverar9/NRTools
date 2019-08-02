@@ -5,6 +5,9 @@ import time
 import imaplib
 import email
 import operator
+
+from datetime import datetime
+
 from itineraries import flight_listing
 
 #%%
@@ -37,6 +40,8 @@ def main():
 
 	#%%
 
+	processed_listings = 0
+
 	if cur_props['inboxcount'] != max(mail_ids): #if we have new emails then we'll process them
 		print('Processing new emails:')
 		for email_id in  range(cur_props['inboxcount'], max(mail_ids)):
@@ -49,17 +54,21 @@ def main():
 
 						if 'southwestairlines@ifly.southwest.com' in msg['from']:
 							this_listing = flight_listing('WN', msg)
-							(cur_props['listings'])['WN-' + this_listing.confirmation_number] = this_listing
-							print("Processed listing {} from {} to {} on {}".format(\
-							this_listing.confirmation_number,\
-							this_listing.departure_airport,\
-							this_listing.destination_airport,\
-							this_listing.depart_datetime
-							))
+							if this_listing.checkin_datetime < datetime.now():
+								print('{} is in the past, cannot process further.'.format(this_listing.confirmation_number))
+							else:
+								(cur_props['listings'])['WN-' + this_listing.confirmation_number] = this_listing
+								print("Processed listing {} from {} to {} on {}".format(\
+								this_listing.confirmation_number,\
+								this_listing.departure_airport,\
+								this_listing.destination_airport,\
+								this_listing.depart_datetime
+								))
+								processed_listings += 1
 				except ValueError:
 					print(ValueError)
 
-	print("{} items added for checkin.\n".format(max(mail_ids)-cur_props['inboxcount']))
+	print("{} items added for checkin.\n".format(processed_listings))
 	cur_props['inboxcount'] = max(mail_ids)
 
 	pkl.dump(cur_props, open('properties.p','wb'))
