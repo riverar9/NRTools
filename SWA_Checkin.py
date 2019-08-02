@@ -56,7 +56,9 @@ def flight_checkin(listings):
             '<span class="confirmation-number--code">' + each.confirmation_number + '</span>',\
             "We are unable to retrieve your reservation.",\
             "Sorry, your itinerary is ineligible for check in online.",\
-            "We do not allow online check-in within one hour from a flight's departure. Please proced to the airport to checkin for this flight."]
+            "We do not allow online check-in within one hour from a flight's departure. Please proced to the airport to checkin for this flight.",\
+            "We are unable to retrieve your reservation.",\
+            "Flight in the past."]
 
         moved_on = False
         try:
@@ -75,8 +77,10 @@ def flight_checkin(listings):
                             pass
 
                 if (wait_for_strings[1] in str(driver.page_source.encode("utf-8"))\
-                    or wait_for_strings[3] in str(driver.page_source.encode("utf-8")\
-                    or wait_for_strings[2] in str(driver.page_source.encode("utf-8")))):
+                    or wait_for_strings[3] in str(driver.page_source.encode("utf-8"))\
+                    or wait_for_strings[2] in str(driver.page_source.encode("utf-8"))\
+                    or wait_for_strings[5] in str(driver.page_source.encode("utf-8"))\
+                    or wait_for_strings[6]] in str(driver.page_source.encode("utf-8"))):
                     moved_on = True
 
 
@@ -90,8 +94,8 @@ def flight_checkin(listings):
                 print("Completed checking into:\t{}".format(each.confirmation_number))
                 driver.close()
             else:
-                pkl.dump(driver.page_source.encode("utf-8"), open(each.confirmation_number + '.txt','wb'))
-                print("Unexpected scenerio. Saved in {}.".format(str(sys.platform)))
+                pkl.dump(driver.page_source.encode("utf-8"), open(each.confirmation_number + '_issue.txt','wb'))
+                print("Unexpected scenerio. Saved as {}.".format(each.confirmation_number + '_issue.txt'))
                 driver.close()
         except:
             pass

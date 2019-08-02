@@ -22,10 +22,12 @@ class flight_listing:
             if message.get_payload().find('TICKET #') != -1:
                 t_full_name = message.get_payload()[message.get_payload().find('TICKET #'):]
             else:
-                t_full_name = message.get_payload()[message.get_payload().find('PASSENGER')]
+                t_full_name = message.get_payload()[message.get_payload().find('PASSENGER'):]
+            #print(t_full_name)
             t_full_name = t_full_name[t_full_name.find(self.first_name):]
-            print(t_full_name)
+            #print(t_full_name)
             t_full_name = t_full_name[:t_full_name.find('<')]
+            #print(t_full_name)
             self.last_name = (t_full_name[:t_full_name.find('\n')-1].split('&nbsp;'))[1]
 
             # 4A This section uses the body to determine the departure airport
