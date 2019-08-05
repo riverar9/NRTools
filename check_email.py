@@ -68,7 +68,7 @@ def main():
 				except ValueError:
 					print(ValueError)
 
-	print("{} items added for checkin.\n".format(processed_listings))
+	print("{} new emails processed.\n".format(max(mail_ids)-cur_props['inboxcount']))
 	cur_props['inboxcount'] = max(mail_ids)
 
 	pkl.dump(cur_props, open('properties.p','wb'))
