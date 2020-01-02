@@ -5,21 +5,19 @@ import time
 import imaplib
 import email
 import operator
+import json
 
 from datetime import datetime
 
 from itineraries import flight_listing
 
 #%%
+email_info = json.load(open(r'Input/Inputs.json','r'))
+
+#%%
 def main():
-	mail_address	= "autononrev@gmail.com"
-	maill_pwd   	= "Rivera1994"
-	smtp_server		= "imap.gmail.com"
-
-	#%%
-
-	mail = imaplib.IMAP4_SSL(smtp_server)
-	mail.login(mail_address,maill_pwd)
+	mail = imaplib.IMAP4_SSL(email_info['smtp_server'])
+	mail.login(email_info['email_address'],email_info['email_password'])
 	mail.select('inbox')
 
 	print('\nSuccessfully connected to {} inbox!'.format(mail_address))
@@ -52,11 +50,14 @@ def main():
 					if isinstance(response, tuple):
 						msg = email.message_from_string(response[1].decode('utf-8'))
 
+						#if it's not from southwest airlines then I don't want it.
 						if 'southwestairlines@ifly.southwest.com' in msg['from']:
 							this_listing = flight_listing('WN', msg)
 							if this_listing.checkin_datetime < datetime.now():
 								print('{} is in the past, cannot process further.'.format(this_listing.confirmation_number))
-							else:
+							
+							#not saving items which aren't in the approved last name list
+							elif this_listing.last_name in email_info['approved_last_names']:
 								(cur_props['listings'])['WN-' + this_listing.confirmation_number] = this_listing
 								print("Processed listing {} from {} to {} on {}".format(\
 								this_listing.confirmation_number,\
