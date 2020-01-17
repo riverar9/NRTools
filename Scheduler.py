@@ -9,7 +9,7 @@ import SWA_Checkin
 import itineraries
 
 time_started = datetime.now()
-test = True
+test = False
 
 #%%
 
