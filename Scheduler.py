@@ -16,7 +16,7 @@ test = True
 def get_emails():
     check_email.main()
     if test:
-        print("Running for: {} minutes".format(str((datetime.now()-time_started).total_seconds()/60)))
+        print("Running for: {} seconds".format(str((datetime.now()-time_started).total_seconds())))
 
 def check_queue_and_checkin():
     properties =  pkl.load(open('properties.p','rb'))

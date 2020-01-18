@@ -22,9 +22,9 @@ def flight_checkin(listings):
     script_dir = os.getcwd()
 
     if 'darwin' == str(sys.platform):
-        driver_path = script_dir + "/chromedrivers/mac_chromedriver"
+        driver_path = script_dir + r"/chromedrivers/mac_chromedriver"
     elif 'win' in str(sys.platform):
-        driver_path = script_dir + "\chromedrivers\win_chromedriver.exe"
+        driver_path = script_dir + r"\chromedrivers\win_chromedriver.exe"
     else:
         raise Exception("App doesn't work for the current OS ({}).".format(str(sys.platform)))
 
@@ -49,6 +49,9 @@ def flight_checkin(listings):
         conf_no_elemet.send_keys(each.confirmation_number)
         fname_element.send_keys(each.first_name)
         lname_element.send_keys(each.last_name)
+
+        while not ((each.checkin_datetime - datetime.now()).total_seconds() < 1):
+            time.sleep(.01)
 
         checkin1_element.click()
 

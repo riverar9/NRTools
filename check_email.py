@@ -20,7 +20,7 @@ def main():
 	mail.login(email_info['email_address'],email_info['email_password'])
 	mail.select('inbox')
 
-	print('\nSuccessfully connected to {} inbox!'.format(mail_address))
+	print('\nSuccessfully connected to {} inbox!'.format(email_info['email_address']))
 
 	#%%
 
@@ -53,7 +53,7 @@ def main():
 						#if it's not from southwest airlines then I don't want it.
 						if 'southwestairlines@ifly.southwest.com' in msg['from']:
 							this_listing = flight_listing('WN', msg)
-							if this_listing.checkin_datetime < datetime.now():
+							if this_listing.depart_datetime < datetime.now():
 								print('{} is in the past, cannot process further.'.format(this_listing.confirmation_number))
 							
 							#not saving items which aren't in the approved last name list
