@@ -20,8 +20,6 @@ def main():
 	mail.login(email_info['email_address'],email_info['email_password'])
 	mail.select('inbox')
 
-	print('\nSuccessfully connected to {} inbox!'.format(email_info['email_address']))
-
 	#%%
 
 	type, data = mail.search(None, 'ALL')
@@ -68,9 +66,10 @@ def main():
 								processed_listings += 1
 				except ValueError:
 					print(ValueError)
-
-	print("{} new emails processed.\n".format(max(mail_ids)-cur_props['inboxcount']))
-	cur_props['inboxcount'] = max(mail_ids)
+		print("{} new emails processed.\n".format(max(mail_ids)-cur_props['inboxcount']))
+		cur_props['inboxcount'] = max(mail_ids)
+	else:
+		print('No new emails.')
 
 	pkl.dump(cur_props, open('properties.p','wb'))
 

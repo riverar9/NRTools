@@ -54,7 +54,7 @@ def check_queue_and_checkin():
 if __name__ == "__main__":
     try:
         schedule.every(1).seconds.do(check_queue_and_checkin)
-        schedule.every(30).seconds.do(get_emails)
+        schedule.every(5).seconds.do(get_emails)
 
         schedule.run_all()
         while True:
