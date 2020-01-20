@@ -12,11 +12,12 @@ import pickle as pkl
 #%%
 
 def flight_checkin(listings):
-    def wait_for(target):
+    #Function to wait until a target is in the window.
+    def wait_for(targets):
         condition_met = 0
         while not(condition_met):
-            for each in target:
-                if each in str(driver.page_source.encode("utf-8")):
+            for target in targets:
+                if target in str(driver.page_source.encode("utf-8")):
                     condition_met = 1
 
     script_dir = os.getcwd()
@@ -50,7 +51,7 @@ def flight_checkin(listings):
         fname_element.send_keys(each.first_name)
         lname_element.send_keys(each.last_name)
 
-        while not ((each.checkin_datetime - datetime.now()).total_seconds() < 1):
+        while not ((each.checkin_datetime - datetime.now()).total_seconds() < 2):
             time.sleep(.01)
 
         checkin1_element.click()
@@ -95,11 +96,10 @@ def flight_checkin(listings):
                     ,'Interisland Carryon Restrictions'])
 
                 print("Completed checking into:\t{}".format(each.confirmation_number))
-                driver.close()
             else:
                 pkl.dump(driver.page_source.encode("utf-8"), open(each.confirmation_number + '_issue.txt','wb'))
                 print("Unexpected scenerio. Saved as {}.".format(each.confirmation_number + '_issue.txt'))
-                driver.close()
+            driver.close()
         except:
             pass
 
