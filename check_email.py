@@ -64,6 +64,10 @@ def main():
 								this_listing.depart_datetime
 								))
 								processed_listings += 1
+							else:
+								print("{} isn't authorized, add {} to the input file to allow them to list.".format(this_listing.last_name))
+								cur_props['unauth_names'] = set(list(cur_props['unauth_names']).append(this_listing.last_name))
+
 				except ValueError:
 					print(ValueError)
 		print("{} new emails processed.\n".format(max(mail_ids)-cur_props['inboxcount']))
