@@ -70,7 +70,7 @@ def main():
 
 				except ValueError:
 					print(ValueError)
-		print("{} new emails processed.\n".format(max(mail_ids)-cur_props['inboxcount']))
+		print("{} new email(s) processed.\n".format(max(mail_ids)-cur_props['inboxcount']))
 		cur_props['inboxcount'] = max(mail_ids)
 	else:
 		print('No new emails.')
