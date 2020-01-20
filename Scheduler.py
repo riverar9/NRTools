@@ -16,7 +16,7 @@ test = False
 def get_emails():
     check_email.main()
     if test:
-        print("Running for: {} minutes".format(str((datetime.now()-time_started).total_seconds()/60)))
+        print("Running for: {} seconds".format(str((datetime.now()-time_started).total_seconds())))
 
 def check_queue_and_checkin():
     properties =  pkl.load(open('properties.p','rb'))
@@ -54,7 +54,7 @@ def check_queue_and_checkin():
 if __name__ == "__main__":
     try:
         schedule.every(1).seconds.do(check_queue_and_checkin)
-        schedule.every(30).seconds.do(get_emails)
+        schedule.every(5).seconds.do(get_emails)
 
         schedule.run_all()
         while True:
