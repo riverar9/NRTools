@@ -3,6 +3,6 @@
 "email_password":               "Rivera1994",
 "smtp_server":                  "imap.gmail.com",
 "approved_last_names":          "Rivera,Sheikh,Glass,Bhatt",
-"email_check_interval_secs":    "30",
-"check_queue_interval_secs":    "15"
+"email_check_interval_secs":    30,
+"check_queue_interval_secs":    15
 }

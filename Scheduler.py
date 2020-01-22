@@ -29,7 +29,6 @@ def check_queue_and_checkin():
 
     queue = []
     removal = []
-
     for each in flight_list:
         if (flight_list[each].checkin_datetime - datetime.now()).total_seconds() <= 60:
             queue.append(flight_list[each])
@@ -50,9 +49,6 @@ def check_queue_and_checkin():
             pkl.dump(properties, open('properties.p','wb'))
 
             sp.write('Done Checking in!')
-
-
-
 
 #%%
 
