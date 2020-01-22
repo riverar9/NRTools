@@ -94,8 +94,6 @@ def flight_checkin(listings):
 
                 wait_for(['Security document issued.'\
                     ,'Interisland Carryon Restrictions'])
-
-                print("Completed checking into:\t{}".format(each.confirmation_number))
             else:
                 pkl.dump(driver.page_source.encode("utf-8"), open(each.confirmation_number + '_issue.txt','wb'))
                 print("Unexpected scenerio. Saved as {}.".format(each.confirmation_number + '_issue.txt'))
